@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Create Account</title>
+</head>
+<body>
+    <form action="/signup" method="post">  
+        <div class="container">
+            <label for="email"><b>Email</b></label>
+            <input type="email" placeholder="Enter Email" name="email" required>
+            
+            <label for="newuname"><b>Username</b></label>
+            <input type="text" placeholder="Enter Username" name="newuname" required>
+
+            <label for="newpsw"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="newpsw" required>
+
+            <button type="submit">Create Account</button>
+        </div>
+    </form>
+</body>
+</html>

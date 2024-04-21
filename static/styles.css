@@ -1,0 +1,120 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5; /* Light grey background */
+}
+
+.container {
+    background-color: #ffffff;
+    padding: 20px 40px 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+input[type="text"], input[type="password"], input[type="email"] {
+    width: 100%;
+    padding: 14px;
+    margin: 10px 0;
+    display: inline-block;
+    border: 1px solid #dddfe2;
+    box-sizing: border-box;
+    border-radius: 6px;
+    font-size: 17px;
+}
+
+button {
+    background-color: #ff2508;
+    color: white;
+    padding: 14px 20px;
+    margin: 10px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 6px;
+    font-size: 20px;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+label {
+    color: #606770;
+    font-size: 18px;
+}
+
+/* Navbar initially completely off-screen */
+.navbar {
+    background-color: #0079d3;
+    color: white;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 250px;
+    height: 100vh;
+    transition: left 0.3s ease-out;
+    z-index: 100;
+    padding: 20px;
+}
+
+/* Navbar active state */
+.navbar.active {
+    left: 0;
+}
+
+/* Navbar links color */
+.navbar a {
+    color: black; /* Making navbar links black */
+    text-decoration: none;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+.nav-toggle {
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    z-index: 101;
+    background-color: #0079d3;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 5px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+}
+
+.main-content {
+    margin: 0;
+    padding: 20px;
+    padding-top: 60px;
+}
+
+.post img {
+    max-width: 100%; /* Ensures the image is responsive and fits within its container */
+    height: auto; /* Maintains the aspect ratio of the image */
+    display: block; /* Display images as block-level elements */
+    margin: 0 auto; /* Center images within their container */
+    border-radius: 8px; /* Optional: Adds rounded corners to images */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Optional: Adds a subtle shadow for depth */
+}
+/* Ensure images are displayed and not oversized */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block; /* Ensure images are not display:none */
+    margin: 0 auto; /* Center images */
+}
+
+
+

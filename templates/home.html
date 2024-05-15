@@ -5,18 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .profile-link {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+        }
+    </style>
+    #profile link adjusted to the top right
 </head>
 <body>
+    <div class="profile-link">
+        <a href="/profile">Profile</a>
+    </div>
+
     <button onclick="toggleNavbar()" class="nav-toggle">▶</button>
     <div id="navbar" class="navbar">
         <ul>
-            <li><a href="/Home">Home</a></li>
+            <li><a href="/">Home</a></li>
             <li><a href="/posts">View Posts</a></li>
             <li><a href="/create_post">Create a New Post</a></li>
             <li><a href="/profile">Profile</a></li>
         </ul>
         <a href="/logout" class="logout-button">Logout</a>
     </div>
+
     <div class="main-content">
         <h1>Welcome, {{ username }}</h1>
         <h2>Recent Posts</h2>

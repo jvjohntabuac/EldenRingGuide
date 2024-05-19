@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>Create Account</title>
+    <script>
+          function validatePassword() {
+            var password = documenr.getElementById("psw").value;
+            var confirmpassword = document.getElementById("confpsw").value;
+            if (password !== confirmpassword) {
+                alwert("Password does not match.");
+                return false;
+            }
+            return true;
+          }
 </head>
 <body>
     <form action="/signup" method="post">  
@@ -17,6 +27,8 @@
 
             <label for="newpsw"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" name="newpsw" required>
+            <label for="psw">password</label>
+
 
             <button type="submit">Create Account</button>
         </div>

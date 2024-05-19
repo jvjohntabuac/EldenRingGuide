@@ -115,6 +115,10 @@ img {
     display: block; /* Ensure images are not display:none */
     margin: 0 auto; /* Center images */
 }
+input[type="password"] {
+    display: block;
+    margin: 10px 0;
+}
 
 
 

@@ -6,18 +6,19 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>Create Account</title>
     <script>
-          function validatePassword() {
-            var password = documenr.getElementById("psw").value;
+        function validatePassword() {
+            var password = document.getElementById("newpsw").value;
             var confirmpassword = document.getElementById("confpsw").value;
             if (password !== confirmpassword) {
-                alwert("Password does not match.");
+                alert("Passwords do not match.");
                 return false;
             }
             return true;
-          }
+        }
+    </script>
 </head>
 <body>
-    <form action="/signup" method="post">  
+    <form action="/signup" method="post" onsubmit="return validatePassword()">  
         <div class="container">
             <label for="email"><b>Email</b></label>
             <input type="email" placeholder="Enter Email" name="email" required>
@@ -26,9 +27,10 @@
             <input type="text" placeholder="Enter Username" name="newuname" required>
 
             <label for="newpsw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="newpsw" required>
-            <label for="psw">password</label>
+            <input type="password" id="newpsw" placeholder="Enter Password" name="newpsw" required>
 
+            <label for="confpsw"><b>Confirm Password</b></label>
+            <input type="password" id="confpsw" placeholder="Confirm Password" name="confpsw" required>
 
             <button type="submit">Create Account</button>
         </div>

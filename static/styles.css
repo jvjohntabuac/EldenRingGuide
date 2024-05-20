@@ -29,7 +29,7 @@ input[type="text"], input[type="password"], input[type="email"] {
 }
 
 button {
-    background-color: #ff2508;
+    background-color: #2806d2;
     color: white;
     padding: 14px 20px;
     margin: 10px 0;
@@ -51,7 +51,7 @@ label {
 
 /* Navbar initially completely off-screen */
 .navbar {
-    background-color: #0079d3;
+    background-color: #0088f0;
     color: white;
     position: fixed;
     top: 0;

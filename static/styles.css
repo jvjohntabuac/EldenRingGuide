@@ -40,10 +40,6 @@ button {
     font-size: 20px;
 }
 
-button:hover {
-    opacity: 0.9;
-}
-
 label {
     color: #606770;
     font-size: 18px;
@@ -118,6 +114,36 @@ img {
 input[type="password"] {
     display: block;
     margin: 10px 0;
+}
+
+/*back button */
+button.back-button {
+    background-color: #0079d3; 
+    color: white;
+    padding: 5px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 8px;
+    cursor: pointer;
+    width: auto;
+    margin-top: 20px;
+}
+
+button.backbutton:hover {
+    opacity: 0.8;
+}
+
+.profile-link {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: #00d389;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.profile-link:hover {
+    text-decoration: underline;
 }
 
 

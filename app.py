@@ -95,6 +95,17 @@ def create_post():
         return redirect(url_for('home'))
     return render_template('create_post.html')
 
+@app.route('/profile')
+def profile():
+    if 'username' not in session:
+        flash('You must be logged in to view the profile page.')
+        return redirect(url_for('login'))
+    conn = get_db_connection()
+    user_id = conn.execute('SELECT id FROM Users WHERE username = ?', (session['username'],)).fetchone()['id']
+    posts = conn.execute('SELECT * FROM Posts WHERE author_id = ? ORDER BY created_at DESC', (user_id,)).fetchall()
+    conn.close()
+    return render_template('profile.html', username=session['username'], posts=posts)
+
 @app.route('/logout')
 def logout():
     session.pop('username', None)
@@ -103,3 +114,4 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
+

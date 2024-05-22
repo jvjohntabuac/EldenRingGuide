@@ -115,23 +115,34 @@ input[type="password"] {
     display: block;
     margin: 10px 0;
 }
+/* Existing CSS */
 
-/*back button */
-button.back-button {
-    background-color: #0079d3; 
+/* Back button specific CSS */
+.back-button-container {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+}
+
+.back-button {
+    display: inline-block;
+    background-color: #0079d3; /* Match the navbar color */
     color: white;
-    padding: 5px 15px;
-    border: none;
-    border-radius: 5px;
-    font-size: 8px;
-    cursor: pointer;
-    width: auto;
-    margin-top: 20px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 24px;
+    text-decoration: none;
+    width: 40px;
+    height: 40px;
+    line-height: 40px; /* Center the arrow vertically */
 }
 
-button.backbutton:hover {
-    opacity: 0.8;
+.back-button:hover {
+    background-color: #09395b;
 }
+
 
 .profile-link {
     position: absolute;

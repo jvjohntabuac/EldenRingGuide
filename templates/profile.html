@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    <div class="back-button-container">
+        <a href="/home" class="back-button">←</a>
+    </div>
     <div class="navbar">
         <a href="/">Home</a>
         <a href="/posts">View Posts</a>
@@ -33,7 +36,6 @@
             <p>You have not posted anything yet.</p>
             {% endfor %}
         </div>
-        <button oneclick="window.location.href='{{ url_for('home') }}'">Back to home button</button>
     </div>
 </body>
 </html>

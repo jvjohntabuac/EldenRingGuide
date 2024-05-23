@@ -124,6 +124,11 @@ input[type="password"] {
     left: 20px;
     z-index: 100;
 }
+.profile-link {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}
 
 .back-button {
     display: inline-block;

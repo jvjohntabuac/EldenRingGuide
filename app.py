@@ -105,6 +105,15 @@ def profile():
     posts = conn.execute('SELECT * FROM Posts WHERE author_id = ? ORDER BY created_at DESC', (user_id,)).fetchall()
     conn.close()
     return render_template('profile.html', username=session['username'], posts=posts)
+@app.route('/Guide')
+def Guide():
+    if 'username' not in session:
+        flash('you must be logged in')
+        return redirect(url_for('Guide'))
+    conn = get_db_connection()
+    user_id = conn.execute('You must be logged in')
+    conn.close()
+    return render_template('guide.html')  
 
 @app.route('/logout')
 def logout():

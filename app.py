@@ -7,7 +7,7 @@ app.secret_key = 'yHjLEqrN3b'
 
 def get_db_connection():
     conn = sqlite3.connect('user_accounts.db')
-    conn.row_factory = sqlite3.Row  # Enables column access by name: row['column_name']
+    conn.row_factory = sqlite3.Row  
     return conn
 
 def authenticate(username, password):
@@ -15,7 +15,7 @@ def authenticate(username, password):
     user = conn.execute("SELECT password FROM Users WHERE username = ?", (username,)).fetchone()
     conn.close()
     if user:
-        password_hash_bin = bytes.fromhex(user['password'])  # Convert hex string back to binary for comparison
+        password_hash_bin = bytes.fromhex(user['password'])  
         if bcrypt.checkpw(password.encode('utf-8'), password_hash_bin):
             return True
     return False
@@ -40,12 +40,12 @@ def signup():
         username = request.form['newuname']
         password = request.form['newpsw']
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        hashed_password_hex = hashed_password.hex()  # Convert binary hash to hexadecimal string
+        hashed_password_hex = hashed_password.hex() 
         
         conn = get_db_connection()
         try:
             conn.execute("INSERT INTO Users (email, username, password) VALUES (?, ?, ?)", 
-                         (email, username, hashed_password_hex))  # Store the hex string
+                         (email, username, hashed_password_hex))  
             conn.commit()
             flash('Account created successfully, please login.')
             return redirect(url_for('login'))
@@ -73,7 +73,7 @@ def create_post():
     
     if request.method == 'POST':
         content = request.form['content']
-        image_url = request.form.get('image_url', '')  # Optional image URL
+        image_url = request.form.get('image_url', '')  
         
         if not content and not image_url:
             flash('Either post content or an image must be provided.')
@@ -105,15 +105,13 @@ def profile():
     posts = conn.execute('SELECT * FROM Posts WHERE author_id = ? ORDER BY created_at DESC', (user_id,)).fetchall()
     conn.close()
     return render_template('profile.html', username=session['username'], posts=posts)
-@app.route('/Guide')
-def Guide():
+@app.route('/guide')
+def guide():
     if 'username' not in session:
-        flash('you must be logged in')
-        return redirect(url_for('Guide'))
-    conn = get_db_connection()
-    user_id = conn.execute('You must be logged in')
-    conn.close()
-    return render_template('guide.html')  
+        flash('You must be logged in to view the guide.')
+        return redirect(url_for('login'))
+    return render_template('guide.html', username=session['username'])
+ 
 
 @app.route('/logout')
 def logout():

@@ -7,6 +7,13 @@
     <title>Create a New Post</title>
 </head>
 <body>
+    <form action="/create_post" method="POST" enctype="multipart/form-data">
+        <textarea name="content" placeholder="Write something..." required></textarea>
+        <input type="url" name="image_url" placeholder="Image URL (optional)">
+        <input type="file" name="image"> <!-- This is the file input element -->
+        <button type="submit">Post</button>
+    </form>
+    
     <h1>Create a New Post</h1>
     <form action="/create_post" method="post">
         <textarea name="content" placeholder="Write something..." required></textarea>

@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-   
 </head>
 <body>
     <div class="profile-link">
@@ -15,7 +14,6 @@
     <button onclick="toggleNavbar()" class="nav-toggle">▶</button>
     <div id="navbar" class="navbar">
         <ul>
-            <li><a href="/">Home</a></li>
             <li><a href="/posts">View Posts</a></li>
             <li><a href="/create_post">Create a New Post</a></li>
             <li><a href="/profile">Profile</a></li>
@@ -32,7 +30,7 @@
             <div class="post">
                 <p><strong>{{ post.username }}</strong>: {{ post.content }}</p>
                 {% if post.image_url %}
-                <img src="{{ post.image_url }}" alt="User posted image" style="max-width: 100%; height: auto;">
+                <img src="{{ post.image_url }}" alt="User posted image">
                 {% endif %}
                 <p>Posted on {{ post.created_at }}</p>
             </div>
@@ -40,7 +38,6 @@
             <p>No posts to show.</p>
             {% endfor %}
         </div>
-        
     </div>
 
     <script>

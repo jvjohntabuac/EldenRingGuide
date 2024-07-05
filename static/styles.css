@@ -1,22 +1,15 @@
+/* Reset and base styles */
 body, html {
     height: 100%;
     margin: 0;
     font-family: Arial, sans-serif;
-    background-color: #f5f5f5; /* Light grey background */
+    background: url(/static/uploads/DB643925-60B5-4E41-A501-54F3EB5A60E8.JPG) no-repeat center center fixed; 
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
-.container {
-    background-color: #ffffff;
-    padding: 20px 40px 40px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 400px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-}
-
+/* Input styles */
 input[type="text"], input[type="password"], input[type="email"] {
     width: 100%;
     padding: 14px;
@@ -45,7 +38,50 @@ label {
     font-size: 18px;
 }
 
-/* Navbar initially completely off-screen */
+.container {
+    background-color: #ffffff;
+    padding: 20px 40px 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    width: 100%;
+    padding: 14px;
+    margin: 10px 0;
+    display: inline-block;
+    border: 1px solid #dddfe2;
+    box-sizing: border-box;
+    border-radius: 6px;
+    font-size: 17px;
+}
+
+button {
+    background-color: #2806d2;
+    color: white;
+    padding: 14px 20px;
+    margin: 10px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 6px;
+    font-size: 20px;
+}
+
+label {
+    color: #606770;
+    font-size: 18px;
+}
+
+
+/* Navbar styles */
 .navbar {
     background-color: #0088f0;
     color: white;
@@ -59,12 +95,10 @@ label {
     padding: 20px;
 }
 
-/* Navbar active state */
 .navbar.active {
     left: 0;
 }
 
-/* Navbar links color */
 .navbar a {
     color: black; /* Making navbar links black */
     text-decoration: none;
@@ -89,33 +123,56 @@ label {
     width: 30px;
     height: 30px;
 }
+    .main-content {
+        margin: 0;
+        padding: 20px;
+        padding-top: 60px;
+        max-width: 800px;
+        width: 90%;
+        background-color: rgba(255, 255, 255, 0.9);
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+        overflow-y: auto; /* Enable vertical scrolling */
+        max-height: calc(100vh - 120px); /* Adjust height as needed */
+    }
+    
 
-.main-content {
-    margin: 0;
-    padding: 20px;
-    padding-top: 60px;
+.posts {
+    margin-top: 20px;
+}
+
+/* Post styles */
+.post {
+    background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent background */
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px 0;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3); /* Shadow for depth */
 }
 
 .post img {
-    max-width: 100%; /* Ensures the image is responsive and fits within its container */
-    height: auto; /* Maintains the aspect ratio of the image */
-    display: block; /* Display images as block-level elements */
-    margin: 0 auto; /* Center images within their container */
-    border-radius: 8px; /* Optional: Adds rounded corners to images */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Optional: Adds a subtle shadow for depth */
-}
-/* Ensure images are displayed and not oversized */
-img {
     max-width: 100%;
-    height: auto;
-    display: block; /* Ensure images are not display:none */
-    margin: 0 auto; /* Center images */
-}
-input[type="password"] {
+    border-radius: 5px;
     display: block;
-    margin: 10px 0;
+    margin: 0 auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
-/* Existing CSS */
+
+/* Profile link */
+.profile-link {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    color: #00d389;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.profile-link:hover {
+    text-decoration: underline;
+}
 
 /* Back button specific CSS */
 .back-button-container {
@@ -123,11 +180,6 @@ input[type="password"] {
     top: 20px;
     left: 20px;
     z-index: 100;
-}
-.profile-link {
-    position: fixed;
-    top: 20px;
-    right: 20px;
 }
 
 .back-button {
@@ -148,19 +200,10 @@ input[type="password"] {
     background-color: #09395b;
 }
 
-
-.profile-link {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    color: #00d389;
-    text-decoration: none;
-    font-size: 18px;
+/* Ensure images are displayed and not oversized */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block; /* Ensure images are not display:none */
+    margin: 0 auto; /* Center images */
 }
-
-.profile-link:hover {
-    text-decoration: underline;
-}
-
-
-

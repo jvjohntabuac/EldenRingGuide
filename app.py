@@ -90,7 +90,7 @@ def create_post():
         
         try:
             conn = get_db_connection()
-            conn.execute('''INSERT INTO Posts (author_id, content, image_url) 
+            conn.execute('''INSEfRT INTO Posts (author_id, content, image_url) 
                             VALUES ((SELECT id FROM Users WHERE username = ?), ?, ?)''', 
                             (session['username'], content, image_url))
             conn.commit()
@@ -121,6 +121,14 @@ def guide():
         flash('You must be logged in to view the guide.')
         return redirect(url_for('login'))
     return render_template('guide.html', username=session['username'])
+
+@app.route('/DLC')
+def DLC():
+    if 'username' not in session:
+        flash('You must be logged in to view the guide.')
+        return redirect(url_for('login'))
+    return render_template('guide.html', username=session['username'])
+
 
 @app.route('/logout')
 def logout():

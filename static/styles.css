@@ -83,7 +83,7 @@ label {
 
 /* Navbar styles */
 .navbar {
-    background-color: #0088f0;
+    background-color: #171d22;
     color: white;
     position: fixed;
     top: 0;
@@ -100,7 +100,7 @@ label {
 }
 
 .navbar a {
-    color: black; /* Making navbar links black */
+    color: rgb(255, 255, 255); /* Making navbar links black */
     text-decoration: none;
 }
 

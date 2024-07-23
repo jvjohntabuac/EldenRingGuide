@@ -1,16 +1,16 @@
 from flask import Flask, request, render_template, redirect, url_for, flash, session
 import sqlite3
 import bcrypt
-import os  # New import for file handling
+import os
 
 app = Flask(__name__)
 app.secret_key = 'yHjLEqrN3b'
-UPLOAD_FOLDER = 'static/uploads/'  # New configuration for upload folder
+UPLOAD_FOLDER = 'static/uploads/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def get_db_connection():
     conn = sqlite3.connect('user_accounts.db')
-    conn.row_factory = sqlite3.Row  # Enables column access by name: row['column_name']
+    conn.row_factory = sqlite3.Row
     return conn
 
 def authenticate(username, password):
@@ -18,7 +18,7 @@ def authenticate(username, password):
     user = conn.execute("SELECT password FROM Users WHERE username = ?", (username,)).fetchone()
     conn.close()
     if user:
-        password_hash_bin = bytes.fromhex(user['password'])  # Convert hex string back to binary for comparison
+        password_hash_bin = bytes.fromhex(user['password'])
         if bcrypt.checkpw(password.encode('utf-8'), password_hash_bin):
             return True
     return False
@@ -43,12 +43,12 @@ def signup():
         username = request.form['newuname']
         password = request.form['newpsw']
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        hashed_password_hex = hashed_password.hex()  # Convert binary hash to hexadecimal string
+        hashed_password_hex = hashed_password.hex()
         
         conn = get_db_connection()
         try:
             conn.execute("INSERT INTO Users (email, username, password) VALUES (?, ?, ?)", 
-                         (email, username, hashed_password_hex))  # Store the hex string
+                         (email, username, hashed_password_hex))
             conn.commit()
             flash('Account created successfully, please login.')
             return redirect(url_for('login'))
@@ -76,21 +76,21 @@ def create_post():
     
     if request.method == 'POST':
         content = request.form['content']
-        image = request.files['image']  # New file input handling
-        image_url = request.form.get('image_url', '')  # Optional image URL
+        image = request.files['image']
+        image_url = request.form.get('image_url', '')
         
         if not content and not image and not image_url:
             flash('Either post content or an image must be provided.')
             return redirect(url_for('create_post'))
         
-        if image and image.filename != '':  # New file saving logic
+        if image and image.filename != '':
             image_path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
             image.save(image_path)
             image_url = url_for('static', filename=f'uploads/{image.filename}')
         
         try:
             conn = get_db_connection()
-            conn.execute('''INSEfRT INTO Posts (author_id, content, image_url) 
+            conn.execute('''INSERT INTO Posts (author_id, content, image_url) 
                             VALUES ((SELECT id FROM Users WHERE username = ?), ?, ?)''', 
                             (session['username'], content, image_url))
             conn.commit()
@@ -105,7 +105,7 @@ def create_post():
     return render_template('create_post.html')
 
 @app.route('/profile')
-def profile():  # New route for profile page
+def profile():
     if 'username' not in session:
         flash('You must be logged in to view the profile page.')
         return redirect(url_for('login'))
@@ -129,6 +129,14 @@ def DLC():
         return redirect(url_for('login'))
     return render_template('guide.html', username=session['username'])
 
+@app.route('/delete_post/<int:post_id>', methods=['POST'])
+def delete_post(post_id):
+    conn = get_db_connection()
+    conn.execute('DELETE FROM Posts WHERE id = ?', (post_id,))
+    conn.commit()
+    conn.close()
+    flash('Post deleted successfully', 'success')
+    return redirect(url_for('profile'))
 
 @app.route('/logout')
 def logout():

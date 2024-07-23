@@ -22,7 +22,6 @@ def initialize_database():
                 );''')
 
     # Add image_url column to Posts table if it does not exist
-    # This is a workaround and should ideally be managed with proper database 
     try:
         c.execute('ALTER TABLE Posts ADD COLUMN image_url TEXT;')
         print("Added 'image_url' column to 'Posts' table.")

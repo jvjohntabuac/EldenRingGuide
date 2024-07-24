@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
     <div class="profile-link">
@@ -23,7 +24,7 @@
         <a href="/logout" class="logout-button">Logout</a>
     </div>
 
-    <div class="main-content">
+    <div class="main-content bg-slate-200">
         <h1>Welcome, {{ username }}</h1>
         <h2>Recent Posts</h2>
         <div class="posts">

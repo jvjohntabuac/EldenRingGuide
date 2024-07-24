@@ -9,6 +9,7 @@ body, html {
     justify-content: center;
     align-items: center;
 }
+
 /* Input styles */
 input[type="text"], input[type="password"], input[type="email"] {
     width: 100%;
@@ -33,13 +34,17 @@ button {
     font-size: 20px;
 }
 
+button:hover {
+    background-color: #1f049b;
+}
+
 label {
     color: #606770;
     font-size: 18px;
 }
 
 .container {
-    background-color: #ffffff;
+    background-color: #b1abab;
     padding: 20px 40px 40px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -75,15 +80,18 @@ button {
     font-size: 20px;
 }
 
+button:hover {
+    background-color: #1f049b;
+}
+
 label {
     color: #606770;
     font-size: 18px;
 }
 
-
 /* Navbar styles */
 .navbar {
-    background-color: #171d22;
+    background-color: rgba(23, 29, 34, 0.9); /* Slightly transparent for depth */
     color: white;
     position: fixed;
     top: 0;
@@ -93,19 +101,49 @@ label {
     transition: left 0.3s ease-out;
     z-index: 100;
     padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    border-radius: 0 10px 10px 0;
 }
 
 .navbar.active {
     left: 0;
 }
 
+.navbar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.navbar li {
+    margin: 20px 0;
+}
+
 .navbar a {
-    color: rgb(255, 255, 255); /* Making navbar links black */
+    color: rgb(255, 255, 255); /* Keeping navbar links white */
     text-decoration: none;
+    font-size: 18px;
+    transition: color 0.3s ease;
 }
 
 .navbar a:hover {
-    text-decoration: underline;
+    color: #00d389;
+}
+
+.logout-button {
+    background-color: #d9534f;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    border-radius: 5px;
+    display: block;
+    margin-top: 20px;
+    text-decoration: none;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+    background-color: #c9302c;
 }
 
 .nav-toggle {
@@ -118,25 +156,31 @@ label {
     border: none;
     cursor: pointer;
     font-size: 18px;
-    padding: 5px;
+    padding: 10px;
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: background-color 0.3s ease;
 }
-    .main-content {
-        margin: 0;
-        padding: 20px;
-        padding-top: 60px;
-        max-width: 800px;
-        width: 90%;
-        background-color: rgba(255, 255, 255, 0.9);
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-        overflow-y: auto; /* Enable vertical scrolling */
-        max-height: calc(100vh - 120px); /* Adjust height as needed */
-    }
-    
+
+.nav-toggle:hover {
+    background-color: #005bb5;
+}
+
+.main-content {
+    margin: 0;
+    padding: 20px;
+    padding-top: 60px;
+    max-width: 800px;
+    width: 90%;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    overflow-y: auto; /* Enable vertical scrolling */
+    max-height: calc(100vh - 120px); /* Adjust height as needed */
+}
 
 .posts {
     margin-top: 20px;

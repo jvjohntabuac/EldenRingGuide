@@ -125,9 +125,13 @@ def guide():
 @app.route('/DLC')
 def DLC():
     if 'username' not in session:
-        flash('You must be logged in to view the guide.')
+        flash('You must be logged in to view the DLC page.')
         return redirect(url_for('login'))
-    return render_template('guide.html', username=session['username'])
+    
+    page = request.args.get('page', 1, type=int)
+    content = f'Blah{page}'
+    return render_template('DLC.html', content=content)
+
 
 @app.route('/delete_post/<int:post_id>', methods=['POST'])
 def delete_post(post_id):

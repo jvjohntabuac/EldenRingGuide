@@ -55,40 +55,6 @@ label {
     transform: translate(-50%, -50%);
 }
 
-input[type="text"],
-input[type="password"],
-input[type="email"] {
-    width: 100%;
-    padding: 14px;
-    margin: 10px 0;
-    display: inline-block;
-    border: 1px solid #dddfe2;
-    box-sizing: border-box;
-    border-radius: 6px;
-    font-size: 17px;
-}
-
-button {
-    background-color: #2806d2;
-    color: white;
-    padding: 14px 20px;
-    margin: 10px 0;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    border-radius: 6px;
-    font-size: 20px;
-}
-
-button:hover {
-    background-color: #1f049b;
-}
-
-label {
-    color: #606770;
-    font-size: 18px;
-}
-
 /* Navbar styles */
 .navbar {
     background-color: rgba(23, 29, 34, 0.9); /* Slightly transparent for depth */
@@ -242,6 +208,27 @@ label {
 
 .back-button:hover {
     background-color: #09395b;
+}
+
+/* Pagination styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.pagination a {
+    background-color: #0079d3;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.pagination a:hover {
+    background-color: #005bb5;
 }
 
 /* Ensure images are displayed and not oversized */

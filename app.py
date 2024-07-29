@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, redirect, url_for, flash, ses
 import sqlite3
 import bcrypt
 import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = 'yHjLEqrN3b'
@@ -84,9 +85,10 @@ def create_post():
             return redirect(url_for('create_post'))
         
         if image and image.filename != '':
-            image_path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
+            filename = secure_filename(image.filename)
+            image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             image.save(image_path)
-            image_url = url_for('static', filename=f'uploads/{image.filename}')
+            image_url = url_for('static', filename=f'uploads/{filename}')
         
         try:
             conn = get_db_connection()
@@ -109,11 +111,14 @@ def profile():
     if 'username' not in session:
         flash('You must be logged in to view the profile page.')
         return redirect(url_for('login'))
+    
     conn = get_db_connection()
     user_id = conn.execute('SELECT id FROM Users WHERE username = ?', (session['username'],)).fetchone()['id']
     posts = conn.execute('SELECT * FROM Posts WHERE author_id = ? ORDER BY created_at DESC', (user_id,)).fetchall()
+    user = conn.execute('SELECT profile_image_url FROM Users WHERE username = ?', (session['username'],)).fetchone()
     conn.close()
-    return render_template('profile.html', username=session['username'], posts=posts)
+    
+    return render_template('profile.html', username=session['username'], posts=posts, user=user)
 
 @app.route('/guide')
 def guide():
@@ -132,7 +137,6 @@ def DLC():
     content = f'Blah{page}'
     return render_template('DLC.html', content=content)
 
-
 @app.route('/delete_post/<int:post_id>', methods=['POST'])
 def delete_post(post_id):
     conn = get_db_connection()
@@ -141,6 +145,43 @@ def delete_post(post_id):
     conn.close()
     flash('Post deleted successfully', 'success')
     return redirect(url_for('profile'))
+
+@app.route('/update_profile', methods=['POST'])
+def update_profile():
+    if 'username' not in session:
+        flash('You must be logged in to update your profile.')
+        return redirect(url_for('login'))
+
+    if 'profile_image' not in request.files:
+        flash('No file part')
+        return redirect(url_for('profile'))
+
+    file = request.files['profile_image']
+    if file.filename == '':
+        flash('No selected file')
+        return redirect(url_for('profile'))
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+        
+        # Update user's profile image URL in the database
+        conn = get_db_connection()
+        conn.execute('UPDATE Users SET profile_image_url = ? WHERE username = ?', 
+                     (url_for('static', filename=f'uploads/{filename}'), session['username']))
+        conn.commit()
+        conn.close()
+        
+        flash('Profile image updated successfully.')
+        return redirect(url_for('profile'))
+
+    flash('Invalid file format')
+    return redirect(url_for('profile'))
+
+def allowed_file(filename):
+    allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 @app.route('/logout')
 def logout():

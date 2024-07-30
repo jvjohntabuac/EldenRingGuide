@@ -1,0 +1,46 @@
++-----------------+     +--------------+     +----------------+
+|     Users       |     |    Posts     |     |   Comments     |
++-----------------+     +--------------+     +----------------+
+| user_id (PK)    | 1   | post_id (PK) | 1   | comment_id (PK) |
+| username        |----<| user_id (FK) |----<| post_id (FK)  |
+| email           |     | content      |     | user_id (FK)   |
+| password        |     | image_url    |     | content        |
+| profile_image_url |   | created_at   |     | created_at     |
++-----------------+     +--------------+     +----------------+
+
++------------------+
+|    User_Profile  |
++------------------+
+| user_id (PK, FK) |
+| profile_image_url |
+| bio              |
+| website          |
++------------------+
+
++------------------+
+|     Guides       |
++------------------+
+| guide_id (PK)    |
+| title            |
+| content          |
+| created_at       |
++------------------+
+
++------------------+
+|    DLC           |
++------------------+
+| dlc_id (PK)      |
+| title            |
+| content          |
+| created_at       |
++------------------+
+
++------------------+
+|    Guide_Comments|
++------------------+
+| comment_id (PK)  |
+| guide_id (FK)    |
+| user_id (FK)     |
+| content          |
+| created_at       |
++------------------+

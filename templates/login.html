@@ -1,23 +1,39 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Character encoding for the document -->
     <meta charset="UTF-8">
+    <!-- Viewport settings for responsive design -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Link to external CSS stylesheet -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- Title of the page that appears in the browser tab -->
     <title>Login Form</title>
 </head>
 <body>
+    <!-- Container div for centering and styling the form -->
     <div class="container">
+        <!-- Form element to handle user login -->
         <form action="/" method="post">
+            <!-- Username label and input field -->
             <label for="uname"><b>Username</b></label>
             <input type="text" placeholder="Enter Username" name="uname" required>
+            
+            <!-- Password label and input field -->
             <label for="psw"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" name="psw" required>
+            
+            <!-- Remember me checkbox -->
+            <label for="remember">
+                <input type="checkbox" id="remember" name="remember">
+                Remember Me
+            </label>
+            
+            <!-- Submit button for the form -->
             <button type="submit">Login</button>
         </form>
+        <!-- Link to the signup page for creating a new account -->
         <a href="/signup">Create New Account</a>
     </div>
 </body>
 </html>
-

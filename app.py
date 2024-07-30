@@ -115,7 +115,7 @@ def profile():
     conn = get_db_connection()
     user_id = conn.execute('SELECT id FROM Users WHERE username = ?', (session['username'],)).fetchone()['id']
     posts = conn.execute('SELECT * FROM Posts WHERE author_id = ? ORDER BY created_at DESC', (user_id,)).fetchall()
-    user = conn.execute('SELECT profile_image_url FROM Users WHERE username = ?', (session['username'],)).fetchone()
+    user = conn.execute('SELECT username, email FROM Users WHERE username = ?', (session['username'],)).fetchone()
     conn.close()
     
     return render_template('profile.html', username=session['username'], posts=posts, user=user)
@@ -165,13 +165,6 @@ def update_profile():
         filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
-        
-        # Update user's profile image URL in the database
-        conn = get_db_connection()
-        conn.execute('UPDATE Users SET profile_image_url = ? WHERE username = ?', 
-                     (url_for('static', filename=f'uploads/{filename}'), session['username']))
-        conn.commit()
-        conn.close()
         
         flash('Profile image updated successfully.')
         return redirect(url_for('profile'))

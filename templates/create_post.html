@@ -7,6 +7,11 @@
     <title>Create a New Post</title>
 </head>
 <body>
+    <div class="back-button-container">
+        <a href="{{ url_for('home') }}" class="back-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.71 16.29L12.41 14H19v-2H12.41l2.3-2.29L14 8l-6 6 6 6z"/></svg>
+            Back
+        </a>
     <form action="/create_post" method="POST" enctype="multipart/form-data">
         <textarea name="content" placeholder="Write something..." required></textarea>
         <input type="url" name="image_url" placeholder="Image URL (optional)">
@@ -20,6 +25,6 @@
         <input type="url" name="image_url" placeholder="Image URL (optional)">
         <button type="submit">Post</button>
     </form>
-    <a href="/home"><img src="{{ url_for('static', filename='home-icon.png') }}" alt="Home" style="width: 30px; height: auto;"></a> <!-- Adjusted href to /home -->
+   
 </body>
 </html>

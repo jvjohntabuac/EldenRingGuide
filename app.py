@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect, url_for, flash, session
 import sqlite3
-import bcrypt
+import bcrypt #If this is having a problem import "pip3 install bcript"
 import os
 from werkzeug.utils import secure_filename
 

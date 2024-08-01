@@ -3,8 +3,9 @@ body, html {
     height: 100%;
     margin: 0;
     font-family: Arial, sans-serif;
-    background: url(/static/uploads/IMG_3767.jpeg) no-repeat center center fixed; 
-    background-size: cover;
+    background: url('/static/uploads/bg.jpeg') no-repeat center center fixed; 
+    background-size: cover; /* Ensure background covers the entire area */
+    background-attachment: fixed; /* Ensures background stays in place */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -61,7 +62,7 @@ label {
 .container::after {
     content: "";
     position: absolute;
-    background: url('path/to/golden-roots.png') no-repeat; /* Replace with your golden root image URL */
+    background: url('static/uploads/bg.jpeg') no-repeat; /* Replace with your golden root image URL */
     background-size: contain;
     width: 150px;
     height: 150px;

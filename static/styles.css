@@ -3,7 +3,7 @@ body, html {
     height: 100%;
     margin: 0;
     font-family: Arial, sans-serif;
-    background: url(/static/uploads/DB643925-60B5-4E41-A501-54F3EB5A60E8.JPG) no-repeat center center fixed; 
+    background: url(/static/uploads/IMG_3767.jpeg) no-repeat center center fixed; 
     background-size: cover;
     display: flex;
     justify-content: center;
@@ -23,7 +23,7 @@ input[type="text"], input[type="password"], input[type="email"] {
 }
 
 button {
-    background-color: #2806d2;
+    background-color: #4a1c9c; /* Adjusted color */
     color: white;
     padding: 14px 20px;
     margin: 10px 0;
@@ -35,7 +35,7 @@ button {
 }
 
 button:hover {
-    background-color: #1f049b;
+    background-color: #3d1485; /* Darker shade */
 }
 
 label {
@@ -43,16 +43,59 @@ label {
     font-size: 18px;
 }
 
+/* Login container with golden root effect */
 .container {
-    background-color: #b1abab;
-    padding: 20px 40px 40px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white background */
+    padding: 30px 40px; /* Increased padding for more space */
+    border-radius: 10px; /* More rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Softer shadow for depth */
     width: 400px;
+    max-width: 90%; /* Ensure responsiveness */
+    position: relative; /* Necessary for positioning pseudo-elements */
+    text-align: center; /* Center-align text inside the container */
+    overflow: hidden; /* Ensure pseudo-elements do not overflow */
+}
+
+/* Pseudo-elements for golden roots effect */
+.container::before,
+.container::after {
+    content: "";
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    background: url('path/to/golden-roots.png') no-repeat; /* Replace with your golden root image URL */
+    background-size: contain;
+    width: 150px;
+    height: 150px;
+    opacity: 0.7;
+    z-index: -1; /* Place behind the container */
+}
+
+.container::before {
+    top: -30px;
+    left: -30px;
+    transform: rotate(-30deg); /* Adjust rotation */
+}
+
+.container::after {
+    bottom: -30px;
+    right: -30px;
+    transform: rotate(30deg); /* Adjust rotation */
+}
+
+.container form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center form elements */
+}
+
+.container a {
+    color: #4a1c9c; /* Match button color */
+    text-decoration: none;
+    font-size: 16px;
+    margin-top: 15px;
+}
+
+.container a:hover {
+    text-decoration: underline;
 }
 
 /* Navbar styles */
@@ -202,7 +245,7 @@ label {
 .back-button-container {
     position: fixed;
     top: 20px;
-    right: 20px;
+    left: 20px;
     z-index: 100;
 }
 
@@ -327,35 +370,4 @@ img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-}
-/* Back button specific styles */
-.back-button-container {
-    position: fixed;
-    top: 20px; /* Distance from the top of the page */
-    left: 20px; /* Distance from the left edge of the page */
-    z-index: 100;
-}
-
-.back-button {
-    display: inline-flex;
-    align-items: center;
-    background-color: #0079d3; /* Match the navbar color */
-    color: white;
-    text-align: center;
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 16px;
-    text-decoration: none;
-    box-shadow: 0 2px 4px rgb(250, 0, 0);
-    transition: background-color 0.3s ease;
-}
-
-.back-button:hover {
-    background-color: #09395b;
-}
-
-.back-button svg {
-    width: 24px;
-    height: 24px;
-    margin-right: 8px;
 }

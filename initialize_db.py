@@ -18,15 +18,9 @@ def initialize_database():
                     author_id INTEGER NOT NULL,
                     content TEXT NOT NULL,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    image_url TEXT,  -- Add this column directly in the create statement
                     FOREIGN KEY (author_id) REFERENCES Users(id)
                 );''')
-
-    # Add image_url column to Posts table if it does not exist
-    try:
-        c.execute('ALTER TABLE Posts ADD COLUMN image_url TEXT;')
-        print("Added 'image_url' column to 'Posts' table.")
-    except sqlite3.OperationalError:
-        print("'image_url' column already exists in 'Posts' table.")
 
     # Create Comments table
     c.execute('''CREATE TABLE IF NOT EXISTS Comments (

@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect, url_for, flash, session
 import sqlite3
-import bcrypt #If this is having a problem import "pip3 install bcript"
+import bcrypt
 import os
 from werkzeug.utils import secure_filename
 
@@ -9,12 +9,10 @@ app.secret_key = 'yHjLEqrN3b'
 UPLOAD_FOLDER = 'static/uploads/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-
 def get_db_connection():
     conn = sqlite3.connect('user_accounts.db')
     conn.row_factory = sqlite3.Row
     return conn
-
 
 def authenticate(username, password):
     conn = get_db_connection()
@@ -26,7 +24,6 @@ def authenticate(username, password):
         if bcrypt.checkpw(password.encode('utf-8'), password_hash_bin):
             return True
     return False
-
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -40,7 +37,6 @@ def login():
         else:
             flash('Login failed: Invalid username or password')
     return render_template('login.html')
-
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -65,18 +61,54 @@ def signup():
             conn.close()
     return render_template('signup.html')
 
+@app.route('/vote/<int:post_id>/<string:vote_type>', methods=['POST'])
+def vote(post_id, vote_type):
+    if 'username' not in session:
+        flash('You must be logged in to vote.')
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    user_id = conn.execute('SELECT id FROM Users WHERE username = ?',
+                           (session['username'],)).fetchone()['id']
+
+    if vote_type == 'up':
+        conn.execute('INSERT INTO Votes (post_id, user_id, vote_type) VALUES (?, ?, ?)',
+                     (post_id, user_id, 'up'))
+    elif vote_type == 'down':
+        conn.execute('INSERT INTO Votes (post_id, user_id, vote_type) VALUES (?, ?, ?)',
+                     (post_id, user_id, 'down'))
+
+    conn.commit()
+
+    # Update post's vote count
+    vote_count = conn.execute('''SELECT COUNT(*) FROM Votes WHERE post_id = ? AND vote_type = ?''',
+                              (post_id, vote_type)).fetchone()[0]
+
+    conn.execute('UPDATE Posts SET vote_count = ? WHERE id = ?',
+                 (vote_count, post_id))
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for('home'))
 
 @app.route('/home')
 def home():
     if 'username' not in session:
         flash('You must be logged in to view the home page.')
         return redirect(url_for('login'))
+    
     conn = get_db_connection()
     posts = conn.execute(
-        'SELECT p.id, p.content, p.image_url, p.created_at, u.username FROM Posts p JOIN Users u ON p.author_id = u.id ORDER BY p.created_at DESC').fetchall()
+        'SELECT p.id, p.content, p.image_url, p.created_at, u.username, '
+        'COALESCE(SUM(CASE WHEN c.id IS NOT NULL THEN 1 ELSE 0 END), 0) AS comment_count '
+        'FROM Posts p '
+        'JOIN Users u ON p.author_id = u.id '
+        'LEFT JOIN Comments c ON p.id = c.post_id '
+        'GROUP BY p.id, p.content, p.image_url, p.created_at, u.username '
+        'ORDER BY p.created_at DESC'
+    ).fetchall()
     conn.close()
     return render_template('home.html', username=session['username'], posts=posts)
-
 
 @app.route('/create_post', methods=['GET', 'POST'])
 def create_post():
@@ -115,7 +147,6 @@ def create_post():
 
     return render_template('create_post.html')
 
-
 @app.route('/profile')
 def profile():
     if 'username' not in session:
@@ -133,14 +164,12 @@ def profile():
 
     return render_template('profile.html', username=session['username'], posts=posts, user=user)
 
-
 @app.route('/guide')
 def guide():
     if 'username' not in session:
         flash('You must be logged in to view the guide.')
         return redirect(url_for('login'))
     return render_template('guide.html', username=session['username'])
-
 
 @app.route('/DLC')
 def DLC():
@@ -152,7 +181,6 @@ def DLC():
     content = f'Blah{page}'
     return render_template('DLC.html', content=content)
 
-
 @app.route('/delete_post/<int:post_id>', methods=['POST'])
 def delete_post(post_id):
     conn = get_db_connection()
@@ -161,7 +189,6 @@ def delete_post(post_id):
     conn.close()
     flash('Post deleted successfully', 'success')
     return redirect(url_for('profile'))
-
 
 @app.route('/update_profile', methods=['POST'])
 def update_profile():
@@ -189,18 +216,15 @@ def update_profile():
     flash('Invalid file format')
     return redirect(url_for('profile'))
 
-
 def allowed_file(filename):
     allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
-
 
 @app.route('/logout')
 def logout():
     session.pop('username', None)
     flash('You have been logged out.')
     return redirect(url_for('login'))
-
 
 if __name__ == '__main__':
     app.run(debug=True)

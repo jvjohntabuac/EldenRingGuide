@@ -442,31 +442,39 @@ img {
 .navbar .close-btn {
     display: none;
 }
-/* Vote section styles */
-.vote-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-right: 10px;
-}
-
-.vote-button {
-    background: none;
+/* Styles for the like button */
+.like-button {
+    background-color: #000000; /* Default color */
+    color: white;
     border: none;
-    font-size: 20px;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
     cursor: pointer;
-    color: #888;
-    padding: 0;
+    border-radius: 5px;
 }
 
-.vote-button:hover {
-    color: #d4af37;
+.like-button:hover {
+    background-color: #45a049; /* Darker shade on hover */
 }
 
-.vote-count {
-    font-size: 18px;
-    color: #000000;
+.like-button.liked {
+    background-color: #f44336; /* Color when liked */
 }
+
+.like-button.liked:hover {
+    background-color: #e53935; /* Darker shade when liked */
+}
+
+.like-count {
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+
 
 /* Post content styles */
 .post-content {

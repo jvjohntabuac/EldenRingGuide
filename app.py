@@ -1,5 +1,5 @@
-from flask import Flask, request, render_template, redirect, url_for, flash, session
 import sqlite3
+from flask import Flask, request, render_template, redirect, url_for, flash,  jsonify, session
 import bcrypt
 import os
 from werkzeug.utils import secure_filename
@@ -32,6 +32,11 @@ def login():
         password = request.form['psw']
         if authenticate(username, password):
             session['username'] = username
+            conn = get_db_connection()
+            user = conn.execute('SELECT id FROM Users WHERE username = ?', (username,)).fetchone()
+            conn.close()
+            if user:
+                session['user_id'] = user['id']
             flash('Login successful!')
             return redirect(url_for('home'))
         else:
@@ -61,51 +66,28 @@ def signup():
             conn.close()
     return render_template('signup.html')
 
-@app.route('/vote/<int:post_id>/<string:vote_type>', methods=['POST'])
-def vote(post_id, vote_type):
-    if 'username' not in session:
-        flash('You must be logged in to vote.')
-        return redirect(url_for('login'))
-
-    conn = get_db_connection()
-    user_id = conn.execute('SELECT id FROM Users WHERE username = ?',
-                           (session['username'],)).fetchone()['id']
-
-    if vote_type == 'up':
-        conn.execute('INSERT INTO Votes (post_id, user_id, vote_type) VALUES (?, ?, ?)',
-                     (post_id, user_id, 'up'))
-    elif vote_type == 'down':
-        conn.execute('INSERT INTO Votes (post_id, user_id, vote_type) VALUES (?, ?, ?)',
-                     (post_id, user_id, 'down'))
-
-    conn.commit()
-
-    # Update post's vote count
-    vote_count = conn.execute('''SELECT COUNT(*) FROM Votes WHERE post_id = ? AND vote_type = ?''',
-                              (post_id, vote_type)).fetchone()[0]
-
-    conn.execute('UPDATE Posts SET vote_count = ? WHERE id = ?',
-                 (vote_count, post_id))
-    conn.commit()
-    conn.close()
-
-    return redirect(url_for('home'))
-
 @app.route('/home')
 def home():
     if 'username' not in session:
         flash('You must be logged in to view the home page.')
         return redirect(url_for('login'))
-    
+
+    user_id = session.get('user_id')
+    if user_id is None:
+        flash('User ID is not available in session.')
+        return redirect(url_for('logout'))
+
     conn = get_db_connection()
     posts = conn.execute(
         'SELECT p.id, p.content, p.image_url, p.created_at, u.username, '
-        'COALESCE(SUM(CASE WHEN c.id IS NOT NULL THEN 1 ELSE 0 END), 0) AS comment_count '
+        'COALESCE(SUM(CASE WHEN l.user_id IS NOT NULL THEN 1 ELSE 0 END), 0) AS like_count, '
+        'COALESCE(MAX(CASE WHEN l.user_id = ? THEN 1 ELSE 0 END), 0) AS is_liked_by_current_user '
         'FROM Posts p '
         'JOIN Users u ON p.author_id = u.id '
-        'LEFT JOIN Comments c ON p.id = c.post_id '
+        'LEFT JOIN Likes l ON p.id = l.post_id '
         'GROUP BY p.id, p.content, p.image_url, p.created_at, u.username '
-        'ORDER BY p.created_at DESC'
+        'ORDER BY p.created_at DESC',
+        (user_id,)
     ).fetchall()
     conn.close()
     return render_template('home.html', username=session['username'], posts=posts)
@@ -134,8 +116,8 @@ def create_post():
         try:
             conn = get_db_connection()
             conn.execute('''INSERT INTO Posts (author_id, content, image_url) 
-                            VALUES ((SELECT id FROM Users WHERE username = ?), ?, ?)''',
-                         (session['username'], content, image_url))
+                            VALUES (?, ?, ?)''',
+                         (session['user_id'], content, image_url))
             conn.commit()
             flash('Your post has been created!')
             return redirect(url_for('home'))
@@ -183,6 +165,10 @@ def DLC():
 
 @app.route('/delete_post/<int:post_id>', methods=['POST'])
 def delete_post(post_id):
+    if 'username' not in session:
+        flash('You must be logged in to perform this action.')
+        return redirect(url_for('login'))
+
     conn = get_db_connection()
     conn.execute('DELETE FROM Posts WHERE id = ?', (post_id,))
     conn.commit()
@@ -210,6 +196,11 @@ def update_profile():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
 
+        conn = get_db_connection()
+        conn.execute('UPDATE Users SET profile_image_url = ? WHERE username = ?', (url_for('static', filename=f'uploads/{filename}'), session['username']))
+        conn.commit()
+        conn.close()
+
         flash('Profile image updated successfully.')
         return redirect(url_for('profile'))
 
@@ -223,8 +214,63 @@ def allowed_file(filename):
 @app.route('/logout')
 def logout():
     session.pop('username', None)
+    session.pop('user_id', None)  # Ensure user_id is also removed
     flash('You have been logged out.')
     return redirect(url_for('login'))
 
+
+
+@app.route('/get_like_count')
+def get_like_count():
+    post_id = request.args.get('post_id')
+    username = session.get('username')  # Safely get the username from the session
+    if not username:
+        return jsonify({'error': 'User not logged in'}), 401
+
+    conn = get_db_connection()
+    try:
+        post = conn.execute('''
+            SELECT like_count, 
+                (SELECT COUNT(*) 
+                 FROM Likes 
+                 WHERE post_id = ? AND username = ?) AS is_liked_by_current_user 
+            FROM Posts 
+            WHERE id = ?
+        ''', (post_id, username, post_id)).fetchone()
+        
+        if post is None:
+            return jsonify({'error': 'Post not found'}), 404
+
+        return jsonify({
+            'like_count': post['like_count'],
+            'is_liked_by_current_user': post['is_liked_by_current_user'] > 0
+        })
+    finally:
+        conn.close()
+
+@app.route('/like_post', methods=['POST'])
+def like_post():
+    post_id = request.form.get('post_id')
+    liked = request.form.get('liked') == 'true'
+    username = session.get('username')  # Safely get the username from the session
+    if not username:
+        return jsonify({'error': 'User not logged in'}), 401
+
+    conn = get_db_connection()
+    try:
+        if liked:
+            conn.execute('INSERT OR IGNORE INTO Likes (post_id, username) VALUES (?, ?)', (post_id, username))
+            conn.execute('UPDATE Posts SET like_count = like_count + 1 WHERE id = ?', (post_id,))
+        else:
+            conn.execute('DELETE FROM Likes WHERE post_id = ? AND username = ?', (post_id, username))
+            conn.execute('UPDATE Posts SET like_count = like_count - 1 WHERE id = ?', (post_id,))
+
+        conn.commit()
+        return jsonify({'success': True})
+    except Exception as e:
+        conn.rollback()
+        return jsonify({'error': str(e)}), 500
+    finally:
+        conn.close()
 if __name__ == '__main__':
     app.run(debug=True)

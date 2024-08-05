@@ -15,6 +15,9 @@
     <div class="container">
         <!-- Form element to handle user login -->
         <form action="/" method="post">
+            <!-- CSRF Token -->
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            
             <!-- Username label and input field -->
             <label for="uname"><b>Username</b></label>
             <input type="text" placeholder="Enter Username" name="uname" required>

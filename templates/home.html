@@ -6,6 +6,8 @@
     <title>Home Page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Include CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body>
     <!-- Navbar Toggle Button -->
@@ -51,74 +53,95 @@
     </div>
 
     <script>
-        // Function to toggle the visibility of the navbar
         function toggleNavbar() {
-            document.getElementById("navbar").classList.toggle("active");
-            document.getElementById("nav-toggle").classList.toggle("hidden");
+            const navbar = document.getElementById("navbar");
+            const navToggle = document.getElementById("nav-toggle");
+            navbar.classList.toggle("active");
+            navToggle.classList.toggle("hidden");
+
+            localStorage.setItem("navbar_active", navbar.classList.contains("active"));
+            localStorage.setItem("nav_toggle_hidden", navToggle.classList.contains("hidden"));
         }
-    
-        // Function to close the navbar
+
         function closeNavbar() {
-            document.getElementById("navbar").classList.remove("active");
-            document.getElementById("nav-toggle").classList.remove("hidden");
+            const navbar = document.getElementById("navbar");
+            const navToggle = document.getElementById("nav-toggle");
+            navbar.classList.remove("active");
+            navToggle.classList.remove("hidden");
+
+            localStorage.setItem("navbar_active", false);
+            localStorage.setItem("nav_toggle_hidden", false);
         }
-    
+
         document.addEventListener('DOMContentLoaded', () => {
+            const navbar = document.getElementById("navbar");
+            const navToggle = document.getElementById("nav-toggle");
+
+            const isNavbarActive = localStorage.getItem("navbar_active") === 'true';
+            const isNavToggleHidden = localStorage.getItem("nav_toggle_hidden") === 'true';
+
+            if (isNavbarActive) {
+                navbar.classList.add("active");
+                navToggle.classList.add("hidden");
+            } else {
+                navbar.classList.remove("active");
+                navToggle.classList.remove("hidden");
+            }
+
             const likeButtons = document.querySelectorAll('.like-button');
-    
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
             likeButtons.forEach(button => {
                 const postId = button.getAttribute('data-post-id');
                 const likeCountElement = document.getElementById(`like-count-${postId}`);
-    
-                // Load like count and like status from the server
+
                 fetch(`/get_like_count?post_id=${postId}`)
                     .then(response => response.json())
                     .then(data => {
-                        likeCountElement.textContent = data.like_count;
-                        if (data.is_liked_by_current_user) {
-                            button.classList.add('liked');
+                        if (data.error) {
+                            console.error('Error fetching like count:', data.error);
+                            return;
                         }
+                        likeCountElement.textContent = data.like_count;
                     })
                     .catch(error => console.error('Error fetching like count:', error));
-    
+
                 button.addEventListener('click', (event) => {
                     toggleLike(event, postId);
                 });
             });
         });
-    
+
         function toggleLike(event, postId) {
             event.preventDefault();
             const likeButton = document.getElementById(`like-button-${postId}`);
             const likeCountElement = document.getElementById(`like-count-${postId}`);
             let currentLikeCount = parseInt(likeCountElement.textContent, 10);
             const isLiked = likeButton.classList.contains('liked');
-    
-            // Update the displayed like count based on the current state
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
             if (isLiked) {
-                currentLikeCount -= 1; // Decrement by 1
+                currentLikeCount -= 1;
                 likeButton.classList.remove('liked');
             } else {
-                currentLikeCount += 1; // Increment by 1
+                currentLikeCount += 1;
                 likeButton.classList.add('liked');
             }
-    
-            // Update the like count on the page
+
             likeCountElement.textContent = currentLikeCount;
-    
-            // Send the updated like state to the server
+
             fetch('/like_post', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken
                 },
-                body: `post_id=${postId}&liked=${!isLiked}`,
+                body: `post_id=${postId}`,
             })
             .then(response => response.json())
             .then(data => {
-                if (!data.success) {
-                    console.error('Error updating like count on server.');
-                    // Revert UI changes if the server update fails
+                if (data.error) {
+                    console.error('Error updating like state on server:', data.error);
                     if (isLiked) {
                         currentLikeCount += 1; // Revert increment
                         likeButton.classList.add('liked');
@@ -132,11 +155,5 @@
             .catch(error => console.error('Error:', error));
         }
     </script>
-    
-    
-    
-    
-
-    
 </body>
 </html>

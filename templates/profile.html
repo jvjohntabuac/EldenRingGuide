@@ -12,15 +12,20 @@
     </script>
 </head>
 <body>
+    <!-- Back Button -->
     <div class="back-button-container">
         <a href="/home" class="back-button">←</a>
     </div>
+
+    <!-- Navbar -->
     <div class="navbar">
         <a href="/">Home</a>
         <a href="/posts">View Posts</a>
         <a href="/create_post">Create a New Post</a>
         <a href="/logout">Logout</a>
     </div>
+
+    <!-- Main Content -->
     <div class="main-content">
         <h1>{{ username }}'s Profile</h1>
         <h2>Your Posts</h2>
@@ -32,8 +37,9 @@
                 <img src="{{ post.image_url }}" alt="{{ post.content | truncate(80, true, '...') }}" style="max-width: 100%; height: auto;">
                 {% endif %}
                 <p>Posted on {{ post.created_at }}</p>
-                <!-- Delete Post Form -->
+                <!-- Delete Post Form with CSRF Token -->
                 <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST" onsubmit="return confirmDeletion()">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button type="submit">Delete Post</button>
                 </form>
             </div>
@@ -41,8 +47,6 @@
             <p>You have not posted anything yet.</p>
             {% endfor %}
         </div>
-        
-   
-
+    </div>
 </body>
 </html>

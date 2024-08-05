@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>Create a New Post</title>
+    <!-- Include CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body>
     <div class="back-button-container">
@@ -12,19 +14,16 @@
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.71 16.29L12.41 14H19v-2H12.41l2.3-2.29L14 8l-6 6 6 6z"/></svg>
             Back
         </a>
+    </div>
+
+    <!-- Create Post Form -->
     <form action="/create_post" method="POST" enctype="multipart/form-data">
+        <!-- CSRF Token -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <textarea name="content" placeholder="Write something..." required></textarea>
         <input type="url" name="image_url" placeholder="Image URL (optional)">
         <input type="file" name="image"> <!-- This is the file input element -->
         <button type="submit">Post</button>
     </form>
-    
-    <h1>Create a New Post</h1>
-    <form action="/create_post" method="post">
-        <textarea name="content" placeholder="Write something..." required></textarea>
-        <input type="url" name="image_url" placeholder="Image URL (optional)">
-        <button type="submit">Post</button>
-    </form>
-   
 </body>
 </html>

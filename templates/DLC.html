@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DLC Guide</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Use your own CSS for styling instead of Bootstrap -->
 </head>
 <body>
     <!-- Back Button -->
@@ -24,7 +23,7 @@
             <div class="col-md-9">
                 <!-- Image Container -->
                 <div class="image-container">
-                    <img src="{{ url_for('static', filename='/uploads/bg.jpeg') }}" alt="Guide Image">
+                    <img src="{{ url_for('static', filename='uploads/bg.jpeg') }}" alt="Guide Image">
                 </div>
                 
                 <!-- Guide Sections -->
@@ -139,19 +138,15 @@
                     <h3>Guide Sections</h3>
                     <select class="custom-select" onchange="location = this.value;">
                         <option value="" selected>Choose a section</option>
-                        <option value="#equipments">Equipments</option>
-                        <option value="#builds">Builds</option>
-                        <option value="#stats">Stats</option>
-                        <option value="#skibidy-fragments">Skibidy Fragments</option>
+                        <option value="#dancing-lion">Dancing Lion</option>
+                        <option value="#renalla">Renalla</option>
+                        <option value="#messmer">Messmer</option>
+                        <option value="#gaius">Gaius</option>
+                        <option value="#bayle">Bayle</option>
                     </select>
                 </div>
             </div>
         </div>
     </div>
-    
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

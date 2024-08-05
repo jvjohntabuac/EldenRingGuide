@@ -8,7 +8,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
+    <!-- Navbar Toggle Button -->
     <button onclick="toggleNavbar()" id="nav-toggle" class="nav-toggle">☰</button>
+
+    <!-- Sidebar Navbar -->
     <div id="navbar" class="navbar bg-gray-800 text-white p-4">
         <button onclick="closeNavbar()" class="nav-close">×</button>
         <ul>
@@ -19,6 +22,7 @@
         <a href="/logout" class="logout-button block py-2 px-4 mt-4 bg-red-600 hover:bg-red-800 text-center">Logout</a>
     </div>
 
+    <!-- Main Content Area -->
     <div class="main-content bg-slate-200 p-4">
         <h1 class="text-xl font-bold">Welcome, {{ username }}</h1>
         <h2 class="text-lg font-semibold mt-4">Recent Posts</h2>
@@ -26,13 +30,7 @@
             {% for post in posts %}
             <div class="post bg-white p-4 mb-4 border rounded shadow">
                 <div class="vote-section">
-                    <form action="{{ url_for('upvote', post_id=post.id) }}" method="POST" class="vote-form">
-                        <button type="submit" class="vote-button upvote">▲</button>
-                    </form>
-                    <div class="vote-count">{{ post.votes }}</div>
-                    <form action="{{ url_for('downvote', post_id=post.id) }}" method="POST" class="vote-form">
-                        <button type="submit" class="vote-button downvote">▼</button>
-                    </form>
+                    <!-- Voting buttons if any -->
                 </div>
                 <div class="post-content">
                     <p><strong>{{ post.username }}</strong>: {{ post.content }}</p>
@@ -50,6 +48,7 @@
                             </div>
                             {% endfor %}
                             <form action="{{ url_for('add_comment', post_id=post.id) }}" method="POST" class="add-comment-form">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                 <input type="text" name="comment" placeholder="Add a comment..." required>
                                 <button type="submit">Post</button>
                             </form>

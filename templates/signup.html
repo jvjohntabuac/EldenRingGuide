@@ -18,8 +18,11 @@
     </script>
 </head>
 <body>
-    <form action="/signup" method="post" onsubmit="return validatePassword()">  
+    <form action="/signup" method="post" onsubmit="return validatePassword()">
         <div class="container">
+            <!-- CSRF Token -->
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
             <label for="email"><b>Email</b></label>
             <input type="email" placeholder="Enter Email" name="email" required>
             

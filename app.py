@@ -5,8 +5,11 @@ from wtforms import StringField, PasswordField, FileField, TextAreaField
 from wtforms.validators import InputRequired, Email, Length
 import bcrypt
 import os
+import base64
+from io import BytesIO
 from werkzeug.utils import secure_filename
 from flask_wtf.csrf import CSRFProtect
+
 # updates
 app = Flask(__name__)
 app.secret_key = 'yHjLEqrN3b'
@@ -53,17 +56,26 @@ def login():
         username = form.uname.data
         password = form.psw.data
         if authenticate(username, password):
-            session['username'] = username
             conn = get_db_connection()
             user = conn.execute('SELECT id FROM Users WHERE username = ?', (username,)).fetchone()
             conn.close()
+            
             if user:
+                session['username'] = username
                 session['user_id'] = user['id']
-            flash('Login successful!')
-            return redirect(url_for('home'))
+                flash('Login successful!')
+                print('Successfully logged in with user_id:', session['user_id'])  # Tracing
+                return redirect(url_for('home'))
+            else:
+                flash('Login failed: User not found.')
+                print('User not found in the database')
         else:
             flash('Login failed: Invalid username or password')
+            print('Invalid username or password')
     return render_template('login.html', form=form)
+
+
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -89,6 +101,7 @@ def signup():
 
 @app.route('/home')
 def home():
+    # Check if user is logged in
     if 'username' not in session:
         flash('You must be logged in to view the home page.')
         return redirect(url_for('login'))
@@ -98,8 +111,17 @@ def home():
         flash('User ID is not available in session.')
         return redirect(url_for('logout'))
 
+    # Check for an error flag in the session
+    if 'error_redirected' in session and session['error_redirected']:
+        flash('An error occurred previously. Please try again.')
+        session.pop('error_redirected')  # Clear the error flag
+        return render_template('home.html', username=session['username'], posts=[])
+
     conn = get_db_connection()
     try:
+        # Print query for debugging
+        print("Executing SQL query to fetch posts")
+
         posts = conn.execute(
             '''SELECT p.id, p.content, p.image_url, p.created_at, u.username,
                       COALESCE(l.like_count, 0) AS like_count,
@@ -112,14 +134,32 @@ def home():
                ORDER BY p.created_at DESC''',
             (user_id,)
         ).fetchall()
+
+        # Print fetched posts for debugging
+        print("Fetched posts:", posts)
+
     except sqlite3.OperationalError as e:
         flash(f'An error occurred while querying posts: {e}')
         conn.close()
-        return redirect(url_for('home'))
+        session['error_redirected'] = True  # Set the error flag
+        return redirect(url_for('home'))  # Redirect to home to avoid loop
     finally:
         conn.close()
 
+    # Reset error flag if successful
+    session.pop('error_redirected', None)
+
+    # Debugging information
+    print('Session:', session)
+    print('Posts:', posts)
+
     return render_template('home.html', username=session['username'], posts=posts)
+
+
+
+
+
+
 
 @app.route('/create_post', methods=['GET', 'POST'])
 def create_post():
@@ -137,11 +177,12 @@ def create_post():
             flash('Either post content or an image must be provided.')
             return redirect(url_for('create_post'))
 
+        # Process the image if provided
         if image and image.filename != '':
-            filename = secure_filename(image.filename)
-            image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            image.save(image_path)
-            image_url = url_for('static', filename=f'uploads/{filename}')
+            # Convert image to Base64
+            image_stream = BytesIO(image.read())
+            image_base64 = base64.b64encode(image_stream.getvalue()).decode('utf-8')
+            image_url = f"data:image/jpeg;base64,{image_base64}"
 
         try:
             conn = get_db_connection()

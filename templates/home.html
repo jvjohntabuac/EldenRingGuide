@@ -8,6 +8,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Include CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <style>
+        .main-content {
+            max-width: 800px; /* Optional: set a max width for the main content */
+            margin: auto;
+        }
+        .post img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
     <!-- Navbar Toggle Button -->
@@ -41,7 +54,7 @@
                 <div class="post-content">
                     <p><strong>{{ post.username }}</strong>: {{ post.content }}</p>
                     {% if post.image_url %}
-                    <img src="{{ post.image_url }}" alt="User posted image" class="mt-2 max-w-full h-auto">
+                    <img src="{{ url_for('static', filename='uploads/' ~ post.image_url) }}" alt="{{ post.content | truncate(80, true, '...') }}">
                     {% endif %}
                     <p class="mt-2 text-gray-600">Posted on {{ post.created_at }}</p>
                 </div>

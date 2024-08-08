@@ -17,13 +17,15 @@
     </div>
 
     <!-- Create Post Form -->
-    <form action="/create_post" method="POST" enctype="multipart/form-data">
+    <form action="/create_post" method="POST" enctype="multipart/form-data" class="create-post-form">
         <!-- CSRF Token -->
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <textarea name="content" placeholder="Write something..." required></textarea>
-        <input type="url" name="image_url" placeholder="Image URL (optional)">
-        <input type="file" name="image"> <!-- This is the file input element -->
-        <button type="submit">Post</button>
+        <textarea name="content" placeholder="Write something..." required class="post-content"></textarea>
+        <div class="image-upload-container">
+            <input type="url" name="image_url" placeholder="Image URL (optional)" class="image-url">
+            <input type="file" name="image" class="file-input"> <!-- This is the file input element -->
+        </div>
+        <button type="submit" class="submit-button">Post</button>
     </form>
 </body>
 </html>
